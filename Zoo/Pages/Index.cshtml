@@ -4,8 +4,70 @@
     ViewData["Title"] = "Home page";
 }
 
-<form>
-    <p>
-        <input type="submit" value="Start Timer" />
-    </p>
-</form>
+<div class="row">
+    <form asp-page-handler="add" method="post" class="col-2">
+        <button class="btn btn-primary">Add Monkey</button>
+        <input type="hidden" name="type" value="monkey" />
+        <input type="text" name="name" style="width: 120px" />
+    </form>
+    <form asp-page-handler="add" method="post" class="col-2">
+        <button class="btn btn-primary">Add Lion</button>
+        <input type="hidden" name="type" value="lion" />
+        <input type="text" name="name" style="width: 120px" />
+    </form>
+    <form asp-page-handler="add" method="post" class="col-2">
+        <button class="btn btn-primary">Add Elephant</button>
+        <input type="hidden" name="type" value="elephant" />
+        <input type="text" name="name" style="width: 120px" />
+    </form>
+    <form asp-page-handler="feed" method="post">
+        <button class="btn btn-primary">Feed All</button>
+        <input type="hidden" name="type" value="all" />
+    </form>
+    <form asp-page-handler="feed" method="post">
+        <button class="btn btn-primary">Feed Monkey</button>
+        <input type="hidden" name="type" value="monkey" />
+    </form>
+    <form asp-page-handler="feed" method="post">
+        <button class="btn btn-primary">Feed Lion</button>
+        <input type="hidden" name="type" value="lion" />
+    </form>
+    <form asp-page-handler="feed" method="post">
+        <button class="btn btn-primary">Feed Elephant</button>
+        <input type="hidden" name="type" value="elephant" />
+    </form>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Animal
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.animals[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.animals[0].CurrentEnergy)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var animal in Model.animals)
+        {
+            <tr>
+                <td>
+                    @animal.GetType().Name
+                </td>
+                <td>
+                    @Html.DisplayFor(x => animal.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => animal.CurrentEnergy)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

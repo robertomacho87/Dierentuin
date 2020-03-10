@@ -6,11 +6,13 @@ namespace Zoo.Models
     {
         private int energy;
 
-        public abstract string Name { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public abstract int MaxEnergy { get; }
 
-        public virtual int CurrentEnergy
+        public int CurrentEnergy
         {
             get => energy;
             set

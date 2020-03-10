@@ -2,15 +2,12 @@
 {
     public class Elephant : Animal
     {
-        public override int CurrentEnergy => 10;
-
-        public override int MaxEnergy => 1000;
-
-        public override string Name { get; set; }
+        public override int MaxEnergy => 10000;
 
         public Elephant(string name)
         {
             Name = name;
+            CurrentEnergy = 10;
         }
 
         public override void Eat()
