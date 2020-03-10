@@ -1,89 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
-using Zoo.Models;
+using Zoo.Animals;
 using Zoo.Services;
 
 namespace Zoo.Pages
 {
     public class IndexModel : PageModel
     {
-        public ObservableCollection<Animal> animals;
-
         private readonly ILogger<IndexModel> _logger;
         private readonly AnimalService _animalService;
         private Timer timer;
+
+        public List<Animal> Animals { get; set; }
+
+        public SelectList ListOfAnimals {get; set;}
+
+        [BindProperty(SupportsGet = true)]
+        public string SelectedAddAnimal { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SelectedFeedAnimal { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, AnimalService animalService)
         {
             _logger = logger;
             _animalService = animalService;
-            animals = _animalService.GetAnimals();
+            Animals = _animalService.GetAnimals();
+            ListOfAnimals = new SelectList(_animalService.GetAnimalTypeNames());
         }
 
         public void OnGet()
         {
-            animals.CollectionChanged += OnCollectionChanged;
             StartTimer();
         }
 
-        public void OnPostAdd(string type, string name)
+        public void OnPostAdd(string name)
         {
             if (name is null)
             {
                 return;
             }
-    
-            switch (type)
-            {
-                case "monkey":
-                    _animalService.AddAnimal(new Monkey(name));
-                    break;
 
-                case "lion":
-                    _animalService.AddAnimal(new Lion(name));
-                    break;
-
-                case "elephant":
-                    _animalService.AddAnimal(new Elephant(name));
-                    break;
-            }
+            Type type = Type.GetType($"Zoo.Animals.{SelectedAddAnimal}");         
+            _animalService.AddAnimal((Animal)Activator.CreateInstance(type, name));
         }
 
-        public void OnPostFeed(string type)
+        public void OnPostFeed()
         {
-            switch (type)
+            Type type = Type.GetType($"Zoo.Animals.{SelectedFeedAnimal}");
+            IEnumerable animals = _animalService.GetAnimals().Where(x => x.GetType() == type);
+            foreach (Animal animal in animals)
             {
-                case "all":
-                    foreach(Animal animal in _animalService.GetAnimals())
-                    {
-                        animal.Eat();
-                    }
-                    break;
-
-                case "monkey":
-                    foreach(Monkey monkey in _animalService.FindAnimalsByType<Monkey>())
-                    {
-                        monkey.Eat();
-                    }
-                    break;
-
-                case "lion":
-                    foreach (Lion lion in _animalService.FindAnimalsByType<Lion>())
-                    {
-                        lion.Eat();
-                    }
-                    break;
-
-                case "elephant":
-                    foreach (Elephant elephant in _animalService.FindAnimalsByType<Elephant>())
-                    {
-                        elephant.Eat();
-                    }
-                    break;
+                animal.Eat();
             }
         }
 
@@ -94,15 +72,16 @@ namespace Zoo.Pages
 
         public void UseEnergy(object _)
         {
-            foreach(Animal animal in animals)
+            foreach(Animal animal in Animals)
             {
                 animal.UseEnergy();
             }
         }
 
-        public void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+
+        public PartialViewResult OnGetAnimalPartial()
         {
-            Debug.WriteLine($"item: {args.Action} + {animals.Count}");
+            return Partial("_AnimalPartial", Animals);
         }
     }
 }

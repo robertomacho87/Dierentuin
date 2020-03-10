@@ -1,4 +1,4 @@
-﻿namespace Zoo.Models
+﻿namespace Zoo.Animals
 {
     public class Monkey : Animal
     {

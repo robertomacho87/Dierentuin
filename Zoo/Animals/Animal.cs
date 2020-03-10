@@ -1,24 +1,21 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace Zoo.Models
+namespace Zoo.Animals
 {
     public abstract class Animal
     {
         private int energy;
 
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public abstract int MaxEnergy { get; }
 
+        [Display(Name = "Current Energy")]
         public int CurrentEnergy
         {
             get => energy;
-            set
-            {
-                energy = Math.Clamp(value, 0, MaxEnergy);
-            }
+            set => energy = Math.Clamp(value, 0, MaxEnergy);
         }
 
         public abstract void Eat();

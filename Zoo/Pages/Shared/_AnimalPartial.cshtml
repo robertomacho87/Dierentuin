@@ -1,0 +1,32 @@
+﻿@model List<Zoo.Animals.Animal>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Animal
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].CurrentEnergy)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var animal in Model)
+        {
+            <tr>
+                <td>
+                    @animal.GetType().Name
+                </td>
+                <td>
+                    @animal.Name
+                </td>
+                <td>
+                    @animal.CurrentEnergy
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
