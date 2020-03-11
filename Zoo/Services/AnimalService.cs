@@ -14,6 +14,7 @@ namespace Zoo.Services
         public AnimalService()
         {
             animals = new List<Animal>();
+            animals.AddRange(new List<Animal> { new Monkey("ad"), new Elephant("michiel"), new Lion("Maurice") } );
             animalNames = GetAnimalTypeNames();
         }
 

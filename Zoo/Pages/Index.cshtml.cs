@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Zoo.Animals;
 using Zoo.Services;
 
@@ -44,8 +45,9 @@ namespace Zoo.Pages
             StartTimer();
         }
 
-        public void OnPostAdd(string name)
+        public void OnPostAdd([FromBody] AnimalDto animal)
         {
+            var name = animal.Name;
             if (name is null)
             {
                 return;
@@ -55,15 +57,22 @@ namespace Zoo.Pages
             _animalService.AddAnimal((Animal)Activator.CreateInstance(type, name));
         }
 
-        public void OnPostFeed()
+        public class AnimalDto
         {
-            Type type = Type.GetType($"Zoo.Animals.{SelectedFeedAnimal}");
+            public string Name { get; set; }
+            public string Type { get; set; }
+        }
+
+        public void OnPostFeed([FromBody]string a)
+        {
+            Type type = Type.GetType($"Zoo.Animals.{a}");
             IEnumerable animals = _animalService.GetAnimals().Where(x => x.GetType() == type);
             foreach (Animal animal in animals)
             {
                 animal.Eat();
             }
         }
+
 
         public void StartTimer()
         {
@@ -77,6 +86,18 @@ namespace Zoo.Pages
                 animal.UseEnergy();
             }
         }
+
+        
+        //public  void OnPostFeeding([FromBody] string animal)
+        //{
+
+        //    Type type = Type.GetType($"Zoo.Animals.{animal}");
+        //    IEnumerable animals = _animalService.GetAnimals().Where(x => x.GetType() == type);
+        //    foreach (Animal a in animals)
+        //    {
+        //        a.Eat();
+        //    }
+        //}
 
 
         public PartialViewResult OnGetAnimalPartial()
