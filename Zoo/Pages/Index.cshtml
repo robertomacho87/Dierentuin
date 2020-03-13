@@ -24,14 +24,10 @@
     <script>
         function foo() {
             $('#reload').load('/Index?handler=AnimalPartial')
-
         }
 
         window.onload = function () {
-
-
             setInterval(foo, 500);
-
         }
 
         //$.ajax({
@@ -57,7 +53,6 @@
             var type = $('#SelectedAddAnimal').val();
             var name = $('input').val();
             var animal = {"Name":name,"Type":type};
-            alert(name);
             $.ajax({
                 url: '/?handler=Add',
                 type: 'POST',

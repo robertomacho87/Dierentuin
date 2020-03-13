@@ -53,7 +53,7 @@ namespace Zoo.Pages
                 return;
             }
 
-            Type type = Type.GetType($"Zoo.Animals.{SelectedAddAnimal}");         
+            Type type = Type.GetType($"Zoo.Animals.{animal.Type}");         
             _animalService.AddAnimal((Animal)Activator.CreateInstance(type, name));
         }
 
