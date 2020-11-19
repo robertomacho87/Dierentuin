@@ -10,6 +10,7 @@
             CurrentEnergy = 10;
         }
 
+
         public override void Eat()
         {
             CurrentEnergy += 1250;
